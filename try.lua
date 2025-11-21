@@ -18,8 +18,8 @@ local DEFAULTS = {
 	HIGHLIGHT_FILL_TRANSPARENCY = 0.7,
 	HIGHLIGHT_OUTLINE_COLOR = Color3.fromRGB(0,0,0),
 	HIGHLIGHT_OUTLINE_TRANSPARENCY = 1,
-   PREDICTION = 0.1, -- new setting for prediction
-   SMOOTHING = 0.5, -- new setting for smoothing
+    PREDICTION = 0.1, -- new setting for prediction
+    SMOOTHING = 0.5, -- new setting for smoothing
 }
 
 local limbExtenderData = getgenv().limbExtenderData or {}
