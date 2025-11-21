@@ -3,7 +3,7 @@ local localPlayer = Players.LocalPlayer
 
 local DEFAULTS = {
 	TOGGLE = "L",
-	TARGET_LIMB = "HumanoidRootPart",
+	TARGET_LIMB = "Head",
 	LIMB_SIZE = 15,
 	LIMB_TRANSPARENCY = 0.9,
 	LIMB_CAN_COLLIDE = false,
