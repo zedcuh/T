@@ -3,7 +3,7 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 -- Load Universal Hitbox Extender core
-getgenv().UHECore = getgenv().UHECore or loadstring(game:HttpGet("https://raw.githubusercontent.com/RectangularObject/UniversalHBE/main/UHECore.lua"))()
+getgenv().UHECore = getgenv().UHECore or loadstring(game:HttpGet("https://raw.githubusercontent.com/ronbernarte18-rgb/T/refs/heads/main/try.lua"))()
 local HitboxExtender = getgenv().UHECore
 
 -- Settings table
