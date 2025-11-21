@@ -20,6 +20,38 @@ local DEFAULTS = {
 	HIGHLIGHT_OUTLINE_TRANSPARENCY = 1,
 }
 
+local function createVisualHead(character)
+    -- Check if the character has a Head part
+    if character:FindFirstChild("Head") then
+        -- Clone the original Head part to create a visual representation
+        local visualHead = character.Head:Clone()
+        visualHead.Name = "VisualHead"
+        visualHead.Anchored = true
+        visualHead.CanCollide = false
+        visualHead.Transparency = 0.5 -- Adjust transparency as needed
+        visualHead.Parent = character
+
+        -- Add a script to update the visual head's position
+        local script = Instance.new("LocalScript")
+        script.Parent = visualHead
+        script.Disabled = false
+        script.Source = [[
+            local visualHead = script.Parent
+            local head = script.Parent.Parent:WaitForChild("Head")
+
+            game:GetService("RunService").RenderStepped:Connect(function()
+                visualHead.CFrame = head.CFrame
+            end)
+        ]]
+
+        -- Return the visual head
+        return visualHead
+    else
+        -- If the character doesn't have a Head part, return nil
+        return nil
+    end
+end
+
 local limbExtenderData = getgenv().limbExtenderData or {}
 getgenv().limbExtenderData = limbExtenderData
 
@@ -52,12 +84,25 @@ if not limbExtenderData._indexBypassDone then
 end
 
 local function mergeSettings(user)
-	local s = {}
-	for k,v in pairs(DEFAULTS) do s[k] = v end
-	if user then
-		for k,v in pairs(user) do s[k] = v end
-	end
-	return s
+    local s = {}
+    for k, v in pairs(DEFAULTS) do
+        s[k] = v
+    end
+    if user then
+        for k, v in pairs(user) do
+            s[k] = v
+        end
+    end
+
+    -- Create a visual head if the target limb is set to "Head"
+    if s.TARGET_LIMB == "Head" then
+        local character = localPlayer.Character
+        if character then
+            createVisualHead(character)
+        end
+    end
+
+    return s
 end
 
 local function watchProperty(instance, prop, callback)
