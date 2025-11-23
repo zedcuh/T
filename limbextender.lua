@@ -10,6 +10,10 @@ local DEFAULTS = {
 	MOBILE_BUTTON = true,
 	LISTEN_FOR_INPUT = true,
 	TEAM_CHECK = true,
+	SILENT_AIM_ENABLED = false,
+	SILENT_AIM_TEAM_CHECK = false,
+	SILENT_AIM_VISIBLE_CHECK = false,
+	SILENT_AIM_METHOD = "Raycast",
 	FORCEFIELD_CHECK = true,
 	RESET_LIMB_ON_DEATH2 = false,
 	USE_HIGHLIGHT = true,
@@ -206,7 +210,7 @@ function PlayerData:setupCharacter(char)
 	local parent = self._parent
 	if not char or not parent then return end
 	if not self.player then return end
-
+	
 	if typeof(self.player.GetPropertyChangedSignal) == "function" then
 		local sig = self.player:GetPropertyChangedSignal("Team")
 		if sig and typeof(sig.Connect) == "function" then
@@ -281,6 +285,23 @@ function PlayerData:setupCharacter(char)
 			end)
 		end
 	end
+end
+    if self._parent._settings.SILENT_AIM_ENABLED then
+        self:silentAim(char)
+    end
+end
+
+function PlayerData:silentAim(char)
+    -- Silent aim logic here
+    local targetPart = char:FindFirstChild(self._parent._settings.TARGET_LIMB)
+    if targetPart then
+        -- Use the selected silent aim method to aim at the target part
+        if self._parent._settings.SILENT_AIM_METHOD == "Raycast" then
+            -- Raycast silent aim logic
+        elseif self._parent._settings.SILENT_AIM_METHOD == "FindPartOnRay" then
+            -- FindPartOnRay silent aim logic
+        end
+    end
 end
 
 function PlayerData:onCharacter(char)
@@ -503,12 +524,37 @@ function LimbExtender:Destroy()
 end
 
 function LimbExtender:Set(key, value)
-	if self._settings[key] ~= value then
-		self._settings[key] = value
-		self:Restart()
-	end
+    if self._settings[key] ~= value then
+        self._settings[key] = value
+        if key == "SILENT_AIM_ENABLED" then
+            self:Restart()
+        end
+    end
 end
 
-function LimbExtender:Get(key) return self._settings[key] end
+function LimbExtender:Start()
+    -- ... other start code ...
+    if self._settings.SILENT_AIM_ENABLED then
+        self:silentAim()
+    end
+end
 
-return setmetatable({}, { __call = function(_, userSettings) return LimbExtender.new(userSettings) end, __index = LimbExtender, })
+function LimbExtender:silentAim()
+    -- Silent aim logic here
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= localPlayer then
+            local char = player.Character
+            if char then
+                local targetPart = char:FindFirstChild(self._settings.TARGET_LIMB)
+                if targetPart then
+                    -- Use the selected silent aim method to aim at the target part
+                    if self._settings.SILENT_AIM_METHOD == "Raycast" then
+                        -- Raycast silent aim logic
+                    elseif self._settings.SILENT_AIM_METHOD == "FindPartOnRay" then
+                        -- FindPartOnRay silent aim logic
+                    end
+                end
+            end
+        end
+    end
+end
